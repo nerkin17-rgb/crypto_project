@@ -1,20 +1,12 @@
-﻿-- Создаём БД для хранилища
 CREATE DATABASE dwh;
-
 \c dwh;
 
--- Схема для сырых данных
 CREATE SCHEMA IF NOT EXISTS raw;
-
--- Схема для детального слоя
 CREATE SCHEMA IF NOT EXISTS dds;
-
--- Схема для витрин
 CREATE SCHEMA IF NOT EXISTS dm;
 
--- ============================================
+
 -- СЫРОЙ СЛОЙ (RAW)
--- ============================================
 CREATE TABLE IF NOT EXISTS raw.crypto_snapshot (
     id SERIAL PRIMARY KEY,
     snapshot_time TIMESTAMP NOT NULL,
@@ -29,9 +21,7 @@ CREATE TABLE IF NOT EXISTS raw.crypto_snapshot (
 
 CREATE INDEX idx_raw_time ON raw.crypto_snapshot(snapshot_time);
 
--- ============================================
 -- ДЕТАЛЬНЫЙ СЛОЙ (DDS)
--- ============================================
 CREATE TABLE IF NOT EXISTS dds.dim_coin (
     coin_id SERIAL PRIMARY KEY,
     coin_code VARCHAR(50) UNIQUE NOT NULL,
@@ -52,9 +42,7 @@ CREATE TABLE IF NOT EXISTS dds.fact_market_data (
     UNIQUE(coin_id, snapshot_time)
 );
 
--- ============================================
 -- ВИТРИНЫ (DM)
--- ============================================
 CREATE TABLE IF NOT EXISTS dm.market_summary (
     snapshot_time TIMESTAMP PRIMARY KEY,
     total_market_cap NUMERIC(30, 4),
